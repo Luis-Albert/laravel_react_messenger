@@ -26,7 +26,7 @@ class MessageFactory extends Factory
 
         $groupId = null;
         if ($this->faker->boolean(50)) {
-            $groupId = $this->faker->randomElement(\App\Models\User::pluck('id')->toArray());
+            $groupId = $this->faker->randomElement(\App\Models\Group::pluck('id')->toArray());
 
             //Select group by group_id 
             $group = \App\Models\Group::find($groupId);

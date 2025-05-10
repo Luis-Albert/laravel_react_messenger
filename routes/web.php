@@ -7,7 +7,9 @@ use Inertia\Inertia;
 
 
 
-Route::get('/', [HomeController::class, "home"])->name('home');
+Route::get('/', function () {
+    return Inertia::render('welcome');
+})->name('home');
 
 
 Route::middleware(['auth', 'verified'])->group(function () {

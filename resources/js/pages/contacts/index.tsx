@@ -1,10 +1,22 @@
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { EditIcon, PlusIcon, TrashIcon } from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -26,10 +38,17 @@ interface Contact {
 }
 
 export default function Contacts({ contacts }: { contacts: Contact[] }) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteContactId, setDeleteContactId] = useState<number | null>(null);
+
   const handleDelete = (id: number) => {
-    if (confirm('Are you sure you want to delete this contect?')) {
-      router.delete(`/contacts/${id}`);
-    }
+    setDeleteDialogOpen(true);
+    setDeleteContactId(id);
+  };
+
+  const handleConfirmDelete = () => {
+    router.delete(`/contacts/${deleteContactId}`);
+    setDeleteDialogOpen(false);
   };
 
   return (
@@ -90,6 +109,20 @@ export default function Contacts({ contacts }: { contacts: Contact[] }) {
             </CardContent>
           </Card>
         </div>
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleConfirmDelete}>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </AppLayout>
   );

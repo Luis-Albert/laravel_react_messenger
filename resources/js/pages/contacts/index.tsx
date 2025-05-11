@@ -79,7 +79,7 @@ export default function Contacts({ contacts }: { contacts: Contact[] }) {
                             </Button>
                           </Link>
                           <Button variant="outline" onClick={() => handleDelete(contact.id)}>
-                            <TrashIcon className="h-4 w-4" />
+                            <TrashIcon className="h-4 w-4 gap-0.5" />
                           </Button>
                         </TableCell>
                       </TableRow>

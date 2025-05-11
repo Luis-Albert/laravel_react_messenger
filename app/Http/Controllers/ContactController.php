@@ -11,9 +11,13 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::all();
+        $contacts = Contact::query();
+        if ($request->user()->role == 'user') {
+            $contacts = $contacts->where('user_id', $request->user()->id);
+        }
+        $contacts = $contacts->get();
         return Inertia::render('contacts/index', ['contacts' => $contacts]);
     }
 

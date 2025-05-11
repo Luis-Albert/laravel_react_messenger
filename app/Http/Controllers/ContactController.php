@@ -55,7 +55,7 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
-        //
+        return Inertia::render('contacts/edit');
     }
 
     /**
@@ -71,6 +71,7 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+        return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully');
     }
 }

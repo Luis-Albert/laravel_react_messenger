@@ -59,7 +59,9 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
-        return Inertia::render('contacts/edit');
+        return Inertia::render('contacts/edit', [
+            'contact' => $contact
+        ]);
     }
 
     /**
@@ -67,7 +69,14 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'nullable|email|unique:contacts,email,' . $contact->id,
+            'mobile' => 'required|numeric|digits:9|unique:contacts,mobile,' . $contact->id,
+            'address' => 'nullable'
+        ]);
+        Contact::updated($validatedData);
+        return redirect()->route('contacts.index')->with('success', 'Contact updated successfully');
     }
 
     /**

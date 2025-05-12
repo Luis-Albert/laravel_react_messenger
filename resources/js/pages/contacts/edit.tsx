@@ -18,31 +18,27 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: '/contacts',
   },
   {
-    title: 'Create',
-    href: '/create',
-  },
-  {
     title: 'Edit',
-    href: '/edit',
+    href: '/contacts/edit',
   },
 ];
 
-export default function Edit() {
-  const { data, setData, post, processing, errors } = useForm({
-    name: '',
-    email: '',
-    mobile: '',
-    address: '',
+export default function EditContact({ contact }: { contact: any }) {
+  const { data, setData, put, processing, errors } = useForm({
+    name: contact.name,
+    email: contact.email,
+    mobile: contact.mobile,
+    address: contact.address,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post('/contacts');
+    put(`/contacts/${contact.id}`);
   };
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Edit" />
+      <Head title="Edit Contact" />
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <Card>
           <CardHeader>

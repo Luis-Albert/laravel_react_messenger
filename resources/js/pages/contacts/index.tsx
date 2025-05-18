@@ -35,9 +35,15 @@ interface Contact {
   email: string;
   mobile: string;
   address: string;
+  user_id: number;
+  created_at: string;
+  can: {
+    update: boolean;
+    delete: boolean;
+  };
 }
 
-export default function Contacts({ contacts }: { contacts: Contact[] }) {
+export default function Contacts({ contacts, auth }: { contacts: { data: Contact[] }; auth: any }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteContactId, setDeleteContactId] = useState<number | null>(null);
 
@@ -57,12 +63,14 @@ export default function Contacts({ contacts }: { contacts: Contact[] }) {
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Contacts</h1>
-          <Link href="/contacts/create">
-            <Button>
-              <PlusIcon className="mr-2 h-4 w-4" />
-              Add Contacts
-            </Button>
-          </Link>
+          {auth.can.contacts.create && (
+            <Link href="/contacts/create">
+              <Button>
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Add Contacts
+              </Button>
+            </Link>
+          )}
         </div>
         <div className="flex flex-col gap-4">
           <Card>
@@ -72,7 +80,7 @@ export default function Contacts({ contacts }: { contacts: Contact[] }) {
             <CardContent>
               <div className="flex flex-col gap-4">
                 <Table>
-                  <TableCaption>A list of your recent invoices.</TableCaption>
+                  <TableCaption>A list of your recent contacts.</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-[100px]">#</TableHead>
@@ -84,7 +92,7 @@ export default function Contacts({ contacts }: { contacts: Contact[] }) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {contacts.map((contact) => (
+                    {contacts.data.map((contact) => (
                       <TableRow key={contact.id}>
                         <TableCell className="font-medium">{contact.id}</TableCell>
                         <TableCell>{contact.name}</TableCell>
@@ -92,14 +100,18 @@ export default function Contacts({ contacts }: { contacts: Contact[] }) {
                         <TableCell>{contact.mobile}</TableCell>
                         <TableCell>{contact.address}</TableCell>
                         <TableCell>
-                          <Link href={`/contacts/${contact.id}/edit`}>
-                            <Button variant="outline">
-                              <EditIcon className="h-4 w-4" />
+                          {contact.can.update && (
+                            <Link href={`/contacts/${contact.id}/edit`}>
+                              <Button variant="outline">
+                                <EditIcon className="h-4 w-4" />
+                              </Button>
+                            </Link>
+                          )}
+                          {contact.can.delete && (
+                            <Button variant="outline" onClick={() => handleDelete(contact.id)}>
+                              <TrashIcon className="h-4 w-4" />
                             </Button>
-                          </Link>
-                          <Button variant="outline" onClick={() => handleDelete(contact.id)}>
-                            <TrashIcon className="h-4 w-4" />
-                          </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
